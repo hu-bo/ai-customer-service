@@ -27,9 +27,9 @@ tokenized_questions = [word_tokenize(question) for question in questions]
 tagged_docs = [TaggedDocument(words=doc, tags=[str(i)]) for i, doc in enumerate(tokenized_questions)]  
   
 # 训练Doc2Vec模型  
-model = Doc2Vec(tagged_docs, vector_size=200, min_count=1, window=5, epochs=20)  
-# model.build_vocab(tagged_docs)  
-# model.train(tagged_docs, total_examples=len(tagged_docs), epochs=model.epochs)  
+model = Doc2Vec(vector_size=300, min_count=1, window=5, epochs=20)  
+model.build_vocab(tagged_docs)  
+model.train(tagged_docs, total_examples=len(tagged_docs), epochs=model.epochs)  
 model.save('qa.model')
 
 # # 创建SQLite处理程序实例
@@ -47,7 +47,7 @@ model.save('qa.model')
 def search_and_retrieve_results(query, top_n=5):  
     # 对用户查询进行分词处理  
     tokenized_query = word_tokenize(query)  
-    model = Doc2Vec.load('xxx.model')
+    model = Doc2Vec.load('qa.model')
     # 使用模型为查询生成向量  
     query_vector = model.infer_vector(tokenized_query, alpha=0.025)  
       
